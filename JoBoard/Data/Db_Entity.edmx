@@ -1,0 +1,499 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="JoBoard_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AppliedJobs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Phone_Number" Type="int" Nullable="false" />
+          <Property Name="Resume" Type="varbinary(max)" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="CondidaId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="JobId" Type="int" Nullable="false" />
+          <Property Name="ContentType" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cities">
+          <Key>
+            <PropertyRef Name="CityId" />
+          </Key>
+          <Property Name="CityName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StateId" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="CityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Job">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Job_Title" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="StateId" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="CityId" Type="int" Nullable="false" />
+          <Property Name="Job_Type" Type="nvarchar" MaxLength="100" />
+          <Property Name="Job_Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Job_Requirements" Type="nvarchar(max)" />
+          <Property Name="Company_Name" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Company_Description" Type="nvarchar(max)" />
+          <Property Name="Company_Website" Type="nvarchar(max)" />
+          <Property Name="Company_LinkedIn" Type="nvarchar(max)" />
+          <Property Name="Company_Logo" Type="nvarchar" MaxLength="200" />
+          <Property Name="Creation_Date" Type="datetime" />
+          <Property Name="Deadline" Type="datetime" />
+          <Property Name="Gender" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="PostedJobs">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="JobId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="JobId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SavedJobs">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="JobId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="JobId" Type="int" Nullable="false" />
+          <Property Name="Registration_Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="states">
+          <Key>
+            <PropertyRef Name="StateId" />
+          </Key>
+          <Property Name="StateName" Type="varchar" MaxLength="22" Nullable="false" />
+          <Property Name="StateId" Type="char" MaxLength="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblFiles">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ContentType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Data" Type="varbinary(max)" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__cities__state_co__2BFE89A6">
+          <End Role="states" Type="Self.states" Multiplicity="1" />
+          <End Role="cities" Type="Self.cities" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="states">
+              <PropertyRef Name="StateId" />
+            </Principal>
+            <Dependent Role="cities">
+              <PropertyRef Name="StateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AppliedJobs_dbo_Job_JobId">
+          <End Role="Job" Type="Self.Job" Multiplicity="1" />
+          <End Role="AppliedJobs" Type="Self.AppliedJobs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Job">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AppliedJobs">
+              <PropertyRef Name="JobId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_PostedJobs_dbo_Job_JobId">
+          <End Role="Job" Type="Self.Job" Multiplicity="1" />
+          <End Role="PostedJobs" Type="Self.PostedJobs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Job">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PostedJobs">
+              <PropertyRef Name="JobId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_SavedJobs_dbo_Job_JobId">
+          <End Role="Job" Type="Self.Job" Multiplicity="1" />
+          <End Role="SavedJobs" Type="Self.SavedJobs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Job">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SavedJobs">
+              <PropertyRef Name="JobId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Job_cities">
+          <End Role="cities" Type="Self.cities" Multiplicity="1" />
+          <End Role="Job" Type="Self.Job" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cities">
+              <PropertyRef Name="CityId" />
+            </Principal>
+            <Dependent Role="Job">
+              <PropertyRef Name="CityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Job_states">
+          <End Role="states" Type="Self.states" Multiplicity="1" />
+          <End Role="Job" Type="Self.Job" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="states">
+              <PropertyRef Name="StateId" />
+            </Principal>
+            <Dependent Role="Job">
+              <PropertyRef Name="StateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="JoBoard_DBModelStoreContainer">
+          <EntitySet Name="AppliedJobs" EntityType="Self.AppliedJobs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cities" EntityType="Self.cities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Job" EntityType="Self.Job" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PostedJobs" EntityType="Self.PostedJobs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SavedJobs" EntityType="Self.SavedJobs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="states" EntityType="Self.states" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblFiles" EntityType="Self.tblFiles" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__cities__state_co__2BFE89A6" Association="Self.FK__cities__state_co__2BFE89A6">
+            <End Role="states" EntitySet="states" />
+            <End Role="cities" EntitySet="cities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AppliedJobs_dbo_Job_JobId" Association="Self.FK_dbo_AppliedJobs_dbo_Job_JobId">
+            <End Role="Job" EntitySet="Job" />
+            <End Role="AppliedJobs" EntitySet="AppliedJobs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_PostedJobs_dbo_Job_JobId" Association="Self.FK_dbo_PostedJobs_dbo_Job_JobId">
+            <End Role="Job" EntitySet="Job" />
+            <End Role="PostedJobs" EntitySet="PostedJobs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_SavedJobs_dbo_Job_JobId" Association="Self.FK_dbo_SavedJobs_dbo_Job_JobId">
+            <End Role="Job" EntitySet="Job" />
+            <End Role="SavedJobs" EntitySet="SavedJobs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Job_cities" Association="Self.FK_Job_cities">
+            <End Role="cities" EntitySet="cities" />
+            <End Role="Job" EntitySet="Job" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Job_states" Association="Self.FK_Job_states">
+            <End Role="states" EntitySet="states" />
+            <End Role="Job" EntitySet="Job" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="JoBoard_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="JoBoard_DBEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="cities" EntityType="JoBoard_DBModel.city" />
+          <EntitySet Name="Jobs" EntityType="JoBoard_DBModel.Job" />
+          <EntitySet Name="PostedJobs" EntityType="JoBoard_DBModel.PostedJob" />
+          <EntitySet Name="SavedJobs" EntityType="JoBoard_DBModel.SavedJob" />
+          <EntitySet Name="states" EntityType="JoBoard_DBModel.state" />
+          <AssociationSet Name="FK__cities__state_co__2BFE89A6" Association="JoBoard_DBModel.FK__cities__state_co__2BFE89A6">
+            <End Role="state" EntitySet="states" />
+            <End Role="city" EntitySet="cities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Job_cities" Association="JoBoard_DBModel.FK_Job_cities">
+            <End Role="city" EntitySet="cities" />
+            <End Role="Job" EntitySet="Jobs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_PostedJobs_dbo_Job_JobId" Association="JoBoard_DBModel.FK_dbo_PostedJobs_dbo_Job_JobId">
+            <End Role="Job" EntitySet="Jobs" />
+            <End Role="PostedJob" EntitySet="PostedJobs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_SavedJobs_dbo_Job_JobId" Association="JoBoard_DBModel.FK_dbo_SavedJobs_dbo_Job_JobId">
+            <End Role="Job" EntitySet="Jobs" />
+            <End Role="SavedJob" EntitySet="SavedJobs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Job_states" Association="JoBoard_DBModel.FK_Job_states">
+            <End Role="state" EntitySet="states" />
+            <End Role="Job" EntitySet="Jobs" />
+          </AssociationSet>
+          <EntitySet Name="tblFiles" EntityType="JoBoard_DBModel.tblFile" />
+          <EntitySet Name="AppliedJobs" EntityType="JoBoard_DBModel.AppliedJob" />
+          <AssociationSet Name="FK_dbo_AppliedJobs_dbo_Job_JobId" Association="JoBoard_DBModel.FK_dbo_AppliedJobs_dbo_Job_JobId">
+            <End Role="Job" EntitySet="Jobs" />
+            <End Role="AppliedJob" EntitySet="AppliedJobs" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="city">
+          <Key>
+            <PropertyRef Name="CityId" />
+          </Key>
+          <Property Name="CityName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StateId" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="CityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="state" Relationship="JoBoard_DBModel.FK__cities__state_co__2BFE89A6" FromRole="city" ToRole="state" />
+          <NavigationProperty Name="Jobs" Relationship="JoBoard_DBModel.FK_Job_cities" FromRole="city" ToRole="Job" />
+        </EntityType>
+        <EntityType Name="Job">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Job_Title" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="StateId" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="CityId" Type="Int32" Nullable="false" />
+          <Property Name="Job_Type" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Job_Description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Job_Requirements" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Company_Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Company_Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Company_Website" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Company_LinkedIn" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Company_Logo" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Creation_Date" Type="DateTime" Precision="3" />
+          <Property Name="Deadline" Type="DateTime" Precision="3" />
+          <Property Name="Gender" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="city" Relationship="JoBoard_DBModel.FK_Job_cities" FromRole="Job" ToRole="city" />
+          <NavigationProperty Name="PostedJobs" Relationship="JoBoard_DBModel.FK_dbo_PostedJobs_dbo_Job_JobId" FromRole="Job" ToRole="PostedJob" />
+          <NavigationProperty Name="SavedJobs" Relationship="JoBoard_DBModel.FK_dbo_SavedJobs_dbo_Job_JobId" FromRole="Job" ToRole="SavedJob" />
+          <NavigationProperty Name="state" Relationship="JoBoard_DBModel.FK_Job_states" FromRole="Job" ToRole="state" />
+          <NavigationProperty Name="AppliedJobs" Relationship="JoBoard_DBModel.FK_dbo_AppliedJobs_dbo_Job_JobId" FromRole="Job" ToRole="AppliedJob" />
+        </EntityType>
+        <EntityType Name="PostedJob">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="JobId" />
+          </Key>
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="JobId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Job" Relationship="JoBoard_DBModel.FK_dbo_PostedJobs_dbo_Job_JobId" FromRole="PostedJob" ToRole="Job" />
+        </EntityType>
+        <EntityType Name="SavedJob">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="JobId" />
+          </Key>
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="JobId" Type="Int32" Nullable="false" />
+          <Property Name="Registration_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Job" Relationship="JoBoard_DBModel.FK_dbo_SavedJobs_dbo_Job_JobId" FromRole="SavedJob" ToRole="Job" />
+        </EntityType>
+        <EntityType Name="state">
+          <Key>
+            <PropertyRef Name="StateId" />
+          </Key>
+          <Property Name="StateName" Type="String" Nullable="false" MaxLength="22" FixedLength="false" Unicode="false" />
+          <Property Name="StateId" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="cities" Relationship="JoBoard_DBModel.FK__cities__state_co__2BFE89A6" FromRole="state" ToRole="city" />
+          <NavigationProperty Name="Jobs" Relationship="JoBoard_DBModel.FK_Job_states" FromRole="state" ToRole="Job" />
+        </EntityType>
+        <Association Name="FK__cities__state_co__2BFE89A6">
+          <End Type="JoBoard_DBModel.state" Role="state" Multiplicity="1" />
+          <End Type="JoBoard_DBModel.city" Role="city" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="state">
+              <PropertyRef Name="StateId" />
+            </Principal>
+            <Dependent Role="city">
+              <PropertyRef Name="StateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Job_cities">
+          <End Type="JoBoard_DBModel.city" Role="city" Multiplicity="1" />
+          <End Type="JoBoard_DBModel.Job" Role="Job" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="city">
+              <PropertyRef Name="CityId" />
+            </Principal>
+            <Dependent Role="Job">
+              <PropertyRef Name="CityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_PostedJobs_dbo_Job_JobId">
+          <End Type="JoBoard_DBModel.Job" Role="Job" Multiplicity="1" />
+          <End Type="JoBoard_DBModel.PostedJob" Role="PostedJob" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Job">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PostedJob">
+              <PropertyRef Name="JobId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_SavedJobs_dbo_Job_JobId">
+          <End Type="JoBoard_DBModel.Job" Role="Job" Multiplicity="1" />
+          <End Type="JoBoard_DBModel.SavedJob" Role="SavedJob" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Job">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SavedJob">
+              <PropertyRef Name="JobId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Job_states">
+          <End Type="JoBoard_DBModel.state" Role="state" Multiplicity="1" />
+          <End Type="JoBoard_DBModel.Job" Role="Job" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="state">
+              <PropertyRef Name="StateId" />
+            </Principal>
+            <Dependent Role="Job">
+              <PropertyRef Name="StateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tblFile">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ContentType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Data" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="AppliedJob">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Phone_Number" Type="Int32" Nullable="false" />
+          <Property Name="Resume" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="CondidaId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="JobId" Type="Int32" Nullable="false" />
+          <Property Name="ContentType" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Job" Relationship="JoBoard_DBModel.FK_dbo_AppliedJobs_dbo_Job_JobId" FromRole="AppliedJob" ToRole="Job" />
+        </EntityType>
+        <Association Name="FK_dbo_AppliedJobs_dbo_Job_JobId">
+          <End Type="JoBoard_DBModel.Job" Role="Job" Multiplicity="1" />
+          <End Type="JoBoard_DBModel.AppliedJob" Role="AppliedJob" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Job">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AppliedJob">
+              <PropertyRef Name="JobId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="JoBoard_DBModelStoreContainer" CdmEntityContainer="JoBoard_DBEntities1">
+          <EntitySetMapping Name="cities">
+            <EntityTypeMapping TypeName="JoBoard_DBModel.city">
+              <MappingFragment StoreEntitySet="cities">
+                <ScalarProperty Name="CityId" ColumnName="CityId" />
+                <ScalarProperty Name="StateId" ColumnName="StateId" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Jobs">
+            <EntityTypeMapping TypeName="JoBoard_DBModel.Job">
+              <MappingFragment StoreEntitySet="Job">
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Deadline" ColumnName="Deadline" />
+                <ScalarProperty Name="Creation_Date" ColumnName="Creation_Date" />
+                <ScalarProperty Name="Company_Logo" ColumnName="Company_Logo" />
+                <ScalarProperty Name="Company_LinkedIn" ColumnName="Company_LinkedIn" />
+                <ScalarProperty Name="Company_Website" ColumnName="Company_Website" />
+                <ScalarProperty Name="Company_Description" ColumnName="Company_Description" />
+                <ScalarProperty Name="Company_Name" ColumnName="Company_Name" />
+                <ScalarProperty Name="Job_Requirements" ColumnName="Job_Requirements" />
+                <ScalarProperty Name="Job_Description" ColumnName="Job_Description" />
+                <ScalarProperty Name="Job_Type" ColumnName="Job_Type" />
+                <ScalarProperty Name="CityId" ColumnName="CityId" />
+                <ScalarProperty Name="StateId" ColumnName="StateId" />
+                <ScalarProperty Name="Job_Title" ColumnName="Job_Title" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PostedJobs">
+            <EntityTypeMapping TypeName="JoBoard_DBModel.PostedJob">
+              <MappingFragment StoreEntitySet="PostedJobs">
+                <ScalarProperty Name="JobId" ColumnName="JobId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SavedJobs">
+            <EntityTypeMapping TypeName="JoBoard_DBModel.SavedJob">
+              <MappingFragment StoreEntitySet="SavedJobs">
+                <ScalarProperty Name="Registration_Date" ColumnName="Registration_Date" />
+                <ScalarProperty Name="JobId" ColumnName="JobId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="states">
+            <EntityTypeMapping TypeName="JoBoard_DBModel.state">
+              <MappingFragment StoreEntitySet="states">
+                <ScalarProperty Name="StateId" ColumnName="StateId" />
+                <ScalarProperty Name="StateName" ColumnName="StateName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblFiles">
+            <EntityTypeMapping TypeName="JoBoard_DBModel.tblFile">
+              <MappingFragment StoreEntitySet="tblFiles">
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="ContentType" ColumnName="ContentType" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AppliedJobs">
+            <EntityTypeMapping TypeName="JoBoard_DBModel.AppliedJob">
+              <MappingFragment StoreEntitySet="AppliedJobs">
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="ContentType" ColumnName="ContentType" />
+                <ScalarProperty Name="JobId" ColumnName="JobId" />
+                <ScalarProperty Name="CondidaId" ColumnName="CondidaId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Resume" ColumnName="Resume" />
+                <ScalarProperty Name="Phone_Number" ColumnName="Phone_Number" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,88 @@
+﻿@model IEnumerable<JoBoard.Models.SavedJobs>
+@{
+    ViewBag.Title = "PostedJos";
+}
+
+<link rel="stylesheet" href="~/assets/css/modal.css">
+
+<section class="section-hero overlay inner-page bg-image" style="background-image: url('/assets/images/hero_1.jpg');" id="home-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <h1 class="text-white font-weight-bold">Saved Jobs</h1>
+                <div class="custom-breadcrumbs">
+                    <a href="#">Home</a> <span class="mx-2 slash">/</span>
+                    <a href="#">Job</a> <span class="mx-2 slash">/</span>
+                    <span class="text-white"><strong>Post a Job</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="site-section">
+    <div class="container">
+        <ul class="job-listings mb-5">
+            @foreach (var item in Model)
+            {
+                <li class="job-listing d-block d-sm-flex pb-4 pb-sm-0 align-items-center">
+                    @if (@item.Job.Company_Logo != null)
+                    {
+                        <div class="job-listing-logo">
+                            <img src="~/Uploads/Jobs/@item.Job.Company_Logo" alt="Free Website Template by Free-Template.co" class="img-">
+                        </div>
+                    }
+
+                        <div class="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
+                            <div class="job-listing-position w-25 custom-width mb-3 mb-sm-0">
+                                <h2>@item.Job.Job_Title</h2>
+                                <strong>@item.Job.Company_Name</strong>
+                            </div>
+                            <div class="job-listing-location w-25 mb-3 mb-sm-0 custom-width">
+                                <span class="icon-room"></span> @item.Job.state.StateName
+                            </div>
+                            <!-- Button HTML (to Trigger Modal) -->
+                            <div class="job-listing-meta custom-width ">
+                                <button class="btn btn-primary"  onclick="location.href='@Url.Action("Index", "JobDetail", new { id = @item.Job.Id })'">View Job</button>
+                            </div>
+                            <div class="job-listing-meta  custom-width">
+                                    <i class="icon-remove" id="@item.JobId" data-id="@item.JobId"></i>
+                            </div>
+                            <!-- Modal -->
+                        </div>
+
+                    </li>
+            }
+        </ul>
+
+
+
+    </div>
+</section>
+
+
+<script src="~/Scripts/jquery-1.9.0.min.js"></script>
+<script src="~/Scripts/bootbox.min.js"></script>
+<script>
+    $('.icon-remove').on('click', function () {
+        var el = $(this).closest('.job-listing');
+        el.addClass('fadeout');
+        setTimeout(function () {
+            el.addClass('slideup');
+            setTimeout(function () {
+                el.remove();
+            }, 150);
+        }, 150);
+        var id = $(this).attr("id");
+        $.ajax({
+            type: "POST",
+            url: '/SavedJobs/DeleteConfirmed',
+            /**/
+            data: JSON.stringify({ Id: id }), //use id here
+            /**/
+            dataType: "json",
+            contentType: 'application/json',
+        });
+    });
+</script>
+

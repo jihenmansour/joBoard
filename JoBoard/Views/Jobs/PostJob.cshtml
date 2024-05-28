@@ -1,0 +1,182 @@
+﻿@using JoBoard.Models
+@model JoBoard.Models.JobModel
+@{
+    ViewBag.Title = "PostJob";
+}
+
+<section class="section-hero overlay inner-page bg-image" style="background-image: url('/assets/images/hero_1.jpg');" id="home-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <h1 class="text-white font-weight-bold">Post A Job</h1>
+                <div class="custom-breadcrumbs">
+                    <a href="#">Home</a> <span class="mx-2 slash">/</span>
+                    <a href="#">Job</a> <span class="mx-2 slash">/</span>
+                    <span class="text-white"><strong>Post a Job</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="site-section">
+    @using (Html.BeginForm("PostJob", "Jobs", FormMethod.Post, new { @class = "p-4 p-md-5 border rounded", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="container">
+
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-8 mb-4 mb-lg-0">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h2>Post A Job</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col-lg-12">
+
+                    <h3 class="text-black mb-5 border-bottom pb-2">Job Details</h3>
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Email, "Email")
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", id = "email", @placeholder = "you@yourdomain.com" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Job_Title, "Job Title")
+                        @Html.TextBoxFor(m => m.Job_Title, new { @class = "form-control", id = "job-title", @placeholder = "Product Designer" })
+                        @Html.ValidationMessageFor(m => m.Job_Title, "", new { @class = "text-danger" })
+                    </div>
+                    <div id="dropDownListdiv">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StateId, "Job State")
+                            @Html.DropDownListFor(m => m.StateId, Model.States, "Select State", new { @class = "form-control border rounded", data_style = "btn-black", data_width = "100%", data_live_search = "true" })
+                            @Html.ValidationMessageFor(m => m.StateId, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.CityId, "Job Region")
+                            @Html.DropDownListFor(m => m.CityId, Model.Cities, "Select Region", new { @class = "form-control  border rounded", data_style = "btn-black", data_width = "100%", data_live_search = "true" })
+                            @Html.ValidationMessageFor(m => m.CityId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Job_Type, "Job Type")
+                        @Html.DropDownListFor(m => m.Job_Type, new SelectList(Enum.GetValues(typeof(type))), "Select Job Type", new { @class = "form-control border rounded", id = "job-Type", data_style = "btn-black", data_width = "100%", data_live_search = "true" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Gender, "Gender")
+                        @Html.DropDownListFor(m => m.Gender, new SelectList(Enum.GetValues(typeof(gender))), "Select Gender", new { @class = "form-control border rounded", id = "job-Type", data_style = "btn-black", data_width = "100%", data_live_search = "true" })
+                    </div>
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Job_Description, "Job Description")
+                        @Html.TextAreaFor(m => m.Job_Description, new { @class = "form-control", id = "editor-1", name = "Job_Description", style = "height:375px", @placeholder = "write the job description!" })
+                        @Html.ValidationMessageFor(m => m.Job_Description, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Job_Requirements, "Job Requirements")
+                        @Html.TextAreaFor(m => m.Job_Requirements, new { @class = "form-control", id = "editor-1", name = "Job_Description", style = "height:375px", @placeholder = "write the job description!" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Deadline, "Deadline")
+                        <input id="Deadline" name="Deadline" width="276" value=@Model.Deadline />
+                        @Html.ValidationMessageFor(m => m.Deadline, "", new { @class = "text-danger" })
+                    </div>
+
+                    <h3 class="text-black my-5 border-bottom pb-2">Company Details</h3>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Company_Name, "Company Name")
+                        @Html.TextBoxFor(m => m.Company_Name, new { @class = "form-control", id = "company-name", @placeholder = "e.g. New York" })
+                        @Html.ValidationMessageFor(m => m.Company_Name, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Company_Description, "Company Description")
+                        @Html.TextAreaFor(m => m.Company_Description, new { @class = "form-control", id = "editor-2", name = "Company_Description", style = "height:175px", @placeholder = "write the Company description!" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Company_Website, "Website")
+                        @Html.TextBoxFor(m => m.Company_Website, new { @class = "form-control", id = "company-website", @placeholder = "https://" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Company_LinkedIn, "Linkedin")
+                        @Html.TextBoxFor(m => m.Company_LinkedIn, new { @class = "form-control", id = "company-website-tw", @placeholder = "https://" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Company_Logo, "Upload Comapny Logo") <br>
+                        <label class="btn btn-primary btn-md btn-file">
+                            Browse File<input type="file" name="LogoFile" id="LogoFile">
+                        </label>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="row align-items-center mb-5">
+
+                <div class="col-lg-4 ml-auto">
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="#" class="btn btn-block btn-light btn-md"><span class="icon-open_in_new mr-2"></span>Preview</a>
+                        </div>
+                        <div class="col-6">
+                            <input type="submit" name="submit" class="btn btn-block btn-primary btn-md" value="Save Job" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    }
+</section>
+
+<script src="~/Scripts/jquery-1.9.0.min.js"></script>
+<script src="~/Scripts/bootbox.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
+<link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+<script>
+        $(function () {
+                $("#dropDownListdiv").on("change", "select", function () {
+                      var value = $(this).val();
+                      var id = $(this).attr("id");
+                      $.post("@Url.Action("setDropDrownList")", { type: id, value: value }, function (data) {
+                            switch (id) {
+                                    case "StateId":
+                                        PopulateDropDown("#CityId", data.Cities);
+                                        break;
+                             }
+                    });
+                });
+            });
+            function PopulateDropDown(dropDownId, list) {
+                $(dropDownId).empty();
+                $(dropDownId).append("<option>Please select</option>")
+                $.each(list, function (index, row) {
+                    if (index == 0) {
+                        $(dropDownId).append("<option value='" + row.Value + "' selected='selected'>" + row.Text + "</option>");
+                    } else {
+                        $(dropDownId).append("<option value='" + row.Value + "'>" + row.Text + "</option>")
+                    }
+                });
+    }
+
+
+    $('#Deadline').datepicker({
+        uiLibrary: 'bootstrap4'
+    });
+</script>

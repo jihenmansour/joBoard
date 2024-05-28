@@ -1,0 +1,67 @@
+﻿@model JoBoard.Models.LoginViewModel
+@{
+    ViewBag.Title = "Login";
+    Layout = null;
+}
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css" href="~/assets/account/css/util.css">
+<link rel="stylesheet" type="text/css" href="~/assets/account/css/main.css">
+
+<div class="limiter">
+    <div class="container-login100">
+        <div class="wrap-login100">
+            <div class="login100-form-title" style="background-image: url(/assets/account/images/bg-01.jpg);">
+                <span class="login100-form-title-1">
+                    Login
+                </span>
+            </div>
+
+            <div class="login100-form validate-form">
+                @using (Html.BeginForm())
+                {
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="wrap-input100 validate-input m-b-26" data-validate="Username is required">
+                        @Html.LabelFor(m => m.Email, new { @class = "label-input100" })
+                        @Html.TextBoxFor(m => m.Email, new { @class = "input100", @placeholder = "Enter Email" })
+                        <span class="focus-input100"></span>
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+
+                    if (Model != null && !string.IsNullOrEmpty(Model.Message))
+                    {
+                        <div class="text-danger">
+                            @Model.Message
+                        </div>
+                    }
+
+                    <div class="wrap-input100 validate-input m-b-26" data-validate="Username is required">
+                        @Html.LabelFor(m => m.Password, new { @class = "label-input100" })
+                        @Html.PasswordFor(m => m.Password, new { @class = "input100", @placeholder = "Enter Password" })
+                        <span class="focus-input100"></span>
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+
+
+                    <div class="flex-sb-m w-full p-b-25 p-t-20">
+
+                        <div>
+                            <a href="@Url.Action("Register", "Account")" class="txt1">
+                                Register
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="container-login100-form-btn">
+                        <input type="submit" name="submit" class="login100-form-btn" value="Login" />
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+

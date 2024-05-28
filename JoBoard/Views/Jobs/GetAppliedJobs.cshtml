@@ -1,0 +1,95 @@
+﻿
+@model IEnumerable<JoBoard.Models.JobDetailModel>
+@{
+    ViewBag.Title = "GetAppliedJobs";
+}
+
+<link rel="stylesheet" href="~/assets/css/modal.css">
+
+<section class="section-hero overlay inner-page bg-image" style="background-image: url('/assets/images/hero_1.jpg');" id="home-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <h1 class="text-white font-weight-bold">Applied Jobs</h1>
+                <div class="custom-breadcrumbs">
+                    <a href="#">Home</a> <span class="mx-2 slash">/</span>
+                    <a href="#">Job</a> <span class="mx-2 slash">/</span>
+                    <span class="text-white"><strong>Post a Job</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="site-section">
+    <div class="container">
+        @using (Html.BeginForm("DownloadFile", "Jobs", FormMethod.Post))
+        {
+            <input type="hidden" id="hfFileId" name="FileId" />
+            <input type="submit" id="btnDownload" value="Download" style="display:none" />
+        }
+        <ul class="job-listings mb-5">
+
+            @foreach (var item in Model)
+            {
+                <li class="job-listing d-block d-sm-flex pb-4 pb-sm-0 align-items-center">
+
+                    <div class="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
+                        <div class="job-listing-position custom-width mb-3 mb-sm-0 w-25">
+                            <h2>@item.Name is applying for @item.Job.Job_Title </h2>
+                        </div>
+                        <div class="job-listing-location mb-3 mb-sm-0 custom-width">
+                            <strong>@item.Email</strong>
+                            <p>@item.Phone_Number</p>
+                        </div>
+                        <!-- Button HTML (to Trigger Modal) -->
+
+                        <div class="job-listing-meta custom-width ">
+                            <button class="btn btn-primary" href="javascript:;" onclick="DownloadFile(@item.Id)">Download Resume</button>
+                        </div>
+                        <div class="job-listing-meta  custom-width">
+                            <i class="icon-remove" id="@item.JobId" data-id="@item.JobId"></i>
+                        </div>
+                        <!-- Modal -->
+                    </div>
+
+                </li>
+            }
+        </ul>
+
+
+
+    </div>
+</section>
+
+
+<script src="~/Scripts/jquery-1.9.0.min.js"></script>
+<script src="~/Scripts/bootbox.min.js"></script>
+<script>
+    $('.icon-remove').on('click', function () {
+        var el = $(this).closest('.job-listing');
+        el.addClass('fadeout');
+        setTimeout(function () {
+            el.addClass('slideup');
+            setTimeout(function () {
+                el.remove();
+            }, 150);
+        }, 150);
+        var id = $(this).attr("id");
+        $.ajax({
+            type: "POST",
+            url: '/Jobs/DeleteAConfirmed',
+            /**/
+            data: JSON.stringify({ Id: id }), //use id here
+            /**/
+            dataType: "json",
+            contentType: 'application/json',
+        });
+    });
+    function DownloadFile(fileId) {
+        $("#hfFileId").val(fileId);
+        $("#btnDownload")[0].click();
+    };
+</script>
+
+

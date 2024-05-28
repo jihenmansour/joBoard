@@ -1,0 +1,98 @@
+﻿@model IEnumerable<JoBoard.Models.PostedJobs>
+@{
+    ViewBag.Title = "PostedJos";
+}
+
+
+<link rel="stylesheet" href="~/assets/css/modal.css">
+
+<section class="section-hero overlay inner-page bg-image" style="background-image: url('/assets/images/hero_1.jpg');" id="home-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <h1 class="text-white font-weight-bold">Posted Jobs</h1>
+                <div class="custom-breadcrumbs">
+                    <a href="#">Home</a> <span class="mx-2 slash">/</span>
+                    <a href="#">Job</a> <span class="mx-2 slash">/</span>
+                    <span class="text-white"><strong>Post a Job</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="site-section">
+    <div class="container">
+        <ul class="job-listings mb-5">
+            @foreach (var item in Model)
+            {
+                <li class="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
+                    @if (@item.Job.Company_Logo != null)
+                    {
+                        <div class="job-listing-logo">
+                            <img src="~/Uploads/Jobs/@item.Job.Company_Logo" alt="Free Website Template by Free-Template.co" class="img-">
+                        </div>
+                    }
+
+                    <div class="job-listing-about d-sm-flex w-100 justify-content-between mx-4">
+                        <div class="job-listing-position w-25 mb-3 mb-sm-0">
+                            <h2>@item.Job.Job_Title</h2>
+                            <strong>@item.Job.Company_Name</strong>
+                        </div>
+                        <div class="job-listing-location mb-3 mb-sm-0 w-25">
+                            <span class="icon-room"></span> @item.Job.state.StateName
+                        </div>
+                        <div class="job-listing-location mb-3 mb-sm-0 w-25">
+                            <a href="@Url.Action("GetAppliedJobs", "Jobs", new { id = item.Job.Id })" class="border-0"> View all applications</a>
+                        </div>
+                        <div class="row">
+                            <div class="job-listing-meta col-6">
+                                <!-- Button HTML (to Trigger Modal) -->
+                                <button class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "Jobs", new { id = item.Job.Id })'" data-toggle="modal">Edit</button>
+                            </div>
+
+                            <!-- Button trigger modal -->
+                            <div class="job-listing-meta col-6">
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal_@item.JobId" data-id="@item.JobId">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal_@item.JobId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Delete Item!</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are u sure you want to delete @item.Job.Job_Title ?
+                                    </div>
+                                    <div class="modal-footer">
+                                        @using (Html.BeginForm("DeleteConfirmed", "Jobs", new { id = item.JobId }, FormMethod.Post))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                                            @Html.Hidden("Id", item.JobId)
+                                            <input type="submit" value="Delete" class="btn btn-danger" />
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </li>
+            }
+        </ul>
+
+
+
+    </div>
+</section>
+
+
+

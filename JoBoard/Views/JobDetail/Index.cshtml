@@ -1,0 +1,265 @@
+﻿@model JoBoard.Models.JobDetailModel
+
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "JobDetail";
+}
+
+<!-- HOME -->
+<section class="section-hero overlay inner-page bg-image" style="background-image: url('/assets/images/hero_1.jpg');" id="home-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <h1 class="text-white font-weight-bold">@Model.Job.Job_Title</h1>
+                <div class="custom-breadcrumbs">
+                    <a href="#">Home</a> <span class="mx-2 slash">/</span>
+                    <a href="#">Job</a> <span class="mx-2 slash">/</span>
+                    <span class="text-white"><strong>Product Designer</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="site-section">
+    <div class="container">
+        <div class="row align-items-center mb-5">
+            <div class="col-lg-8 mb-4 mb-lg-0">
+                <div class="d-flex align-items-center">
+                    @if (@Model.Job.Company_Logo != null)
+                    {
+                        <div class="border p-2 d-inline-block mr-3 rounded w-25">
+                            <img src="~/Uploads/Jobs/@Model.Job.Company_Logo" alt="Free Website Template by Free-Template.co" class="img-fluid">
+                        </div>
+                    }
+                    <div>
+                        <h2>@Model.Job.Job_Title</h2>
+                        <div>
+                            <span class="ml-0 mr-2 mb-2"><span class="icon-briefcase mr-2"></span>@Model.Job.Company_Name</span>
+                            <span class="m-2"><span class="icon-room mr-2"></span>@Model.Job.state.StateName</span>
+                            <span class="m-2"><span class="icon-envelope mr-2"></span>@Model.Job.Email</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-block btn-light btn-md">
+                            <div class="row align-items-center m-0">
+                                <span class="@(ViewBag.Success==true?"heart icon-heart mr-2 text-danger":"heart icon-heart-o mr-2 text-danger")"> </span>
+                                @if (ViewBag.Success == true)
+                                {<div id="save">Saved!</div>}
+                                else
+                                {<div id="save">Save Job</div>}
+                            </div>
+                        </button>
+                    </div>
+                    @if (!Request.IsAuthenticated)
+                    {
+                        <div class="col-6">
+                            <a class="btn btn-block btn-primary btn-md" href="@Url.Action("Login", "Account")">
+                                Apply Now
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        if (ViewBag.Result == true)
+                        {
+                            <div class="col-6">
+                                <button class="btn btn-block btn-primary btn-md">
+                                    Applied!
+                                </button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-6">
+                                <button class="btn btn-block btn-primary btn-md" data-toggle="modal" data-target="#exampleModalCenter">
+                                    Apply Now
+                                </button>
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        @*@if (ViewBag.Result == true)
+            {<div>Applied!</div>}
+            else
+            {<div>Apply Now</div>}*@
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    @*@Html.Partial("ApplyJobPartial")*@
+
+                    @using (Html.BeginForm("ApplyJobPartial", "JobDetail", FormMethod.Post, new { enctype = "multipart/form-data", id = "FormId" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("JobId", Model.Job.Id);
+
+                        <div class="modal-body">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Name, "Full Name")
+                                @Html.TextBoxFor(m => m.Name, new { @class = "form-control", id = "name" })
+                                <span class="name-validation-error text-danger"></span>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.LabelFor(m => m.Email, "Email")
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", id = "email", placeholder = "Email Here" })
+                                    <span class="email-validation-error text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    @Html.LabelFor(m => m.Phone_Number, "Phone Number")
+                                    @Html.TextBoxFor(m => m.Phone_Number, new { @class = "form-control", id = "phoneNum", placeholder = "Phone Number", Value = "" })
+                                    <span class="phone-validation-error text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="btn btn-primary btn-md btn-file">
+                                    <input type="hidden" id="hfFileId" name="FileId" />
+                                    Browse File <input type="file" name="postedFile" />
+                                </label>
+                                <span class="file-validation-error text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" value="@Model.Job.Id" name="JobId" class="btn btn-primary"> Apply </button>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="mb-5">
+                    <h3 class="h5 d-flex align-items-center mb-4 text-primary"><span class="icon-align-left mr-3"></span>Job Description</h3>
+                    <p>@Model.Job.Job_Description</p>
+                </div>
+                <div class="mb-5">
+                    <h3 class="h5 d-flex align-items-center mb-4 text-primary"><span class="icon-book mr-3"></span>Requirements</h3>
+                    <ul class="list-unstyled m-0 p-0">
+                        <li class="d-flex align-items-start mb-2"><span>@Model.Job.Job_Requirements</span></li>
+                    </ul>
+                </div>
+
+
+            </div>
+            <div class="col-lg-4">
+                <div class="bg-light p-3 border rounded mb-4">
+                    <h3 class="text-primary  mt-3 h5 pl-3 mb-3 ">Job Summary</h3>
+                    <ul class="list-unstyled pl-3 mb-0">
+                        <li class="mb-2"><strong class="text-black">Published on:</strong> @Model.Job.Creation_Date.ToLongDateString()</li>
+                        <li class="mb-2"><strong class="text-black">Employment Status:</strong> @Model.Job.Job_Type</li>
+                        <li class="mb-2"><strong class="text-black">Job Location:</strong> @Model.Job.state.StateName, @Model.Job.city.CityName</li>
+                        <li class="mb-2"><strong class="text-black">Gender:</strong> @Model.Job.Gender</li>
+                        <li class="mb-2"><strong class="text-black">Application Deadline:</strong> @Model.Job.Deadline.Value.ToLongDateString()</li>
+                    </ul>
+                </div>
+
+                <div class="bg-light p-3 border rounded">
+                    <h3 class="text-primary  mt-3 h5 pl-3 mb-3 ">Share</h3>
+                    <div class="px-3">
+                        <a href="@Model.Job.Company_Website" target="_blank" class="pt-3 pb-3 pr-3 pl-0"><span class="icon-web"></span></a>
+                        <a href="#" class="pt-3 pb-3 pr-3 pl-0"><span class="icon-twitter"></span></a>
+                        <a href="@Model.Job.Company_LinkedIn" target="_blank" class="pt-3 pb-3 pr-3 pl-0"><span class="icon-linkedin"></span></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@{Html.RenderAction("RelatedJobs", "JobDetail", new { id = Model.Job.Id, query = Model.Job.Job_Title });}
+
+
+<script src="~/Scripts/jquery-1.9.0.min.js"></script>
+<script src="~/Scripts/bootbox.min.js"></script>
+
+<script>
+    $("footer").hide();
+    $(".btn-light").click(function () {
+        if ($(".heart").hasClass("icon-heart")) {
+            $(".heart").removeClass("icon-heart");
+            $(".heart").addClass("icon-heart-o");
+            $("#save").html("Save Job");
+              $.ajax({
+                  type: "POST",
+                  url: '/JobDetail/DeleteSavedJobs',
+                  data: JSON.stringify({ Id: @Model.Job.Id }), //use id here
+                  dataType: "json",
+                  contentType: 'application/json',
+                   });
+                 }
+        else {
+            $(".heart").removeClass("icon-heart-o");
+            $(".heart").addClass("icon-heart");
+            $("#save").html("Saved!");
+            var Sjob = {
+                JobId: @Model.Job.Id
+            };
+            $.ajax({
+                url: '/JobDetail/SaveJob',
+                type: 'POST',
+                dataType: "json",
+                contentType: 'application/json',
+                data: JSON.stringify(Sjob),
+                success: function (result) {
+                    var saved = result.saved;
+
+                    if (saved === true) {
+
+                    }
+                }
+            });
+            console.log(Sjob);
+        }
+    });
+
+$("#FormId").submit(function() {
+  if($("#name").val() == "" || $("#email").val() == "") {
+      $(".name-validation-error").html("The Name Field is required.");
+    return false;
+  }
+
+
+     if($("#email").val() == "") {
+      $(".email-validation-error").html("The Email Field is required.");
+    return false;
+  }
+
+
+ if($("#phoneNum").val() == "") {
+      $(".phone-validation-error").html("The Phone number Field is required.");
+    return false;
+  }
+
+
+     if($("#postedFile").val() == "") {
+      $(".file-validation-error").html("Please select a file.");
+    return false;
+  }
+})
+
+
+</script>
+

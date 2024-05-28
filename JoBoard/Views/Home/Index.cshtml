@@ -1,0 +1,163 @@
+﻿@using PagedList.Mvc
+@model  JoBoard.Models.IndexViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<section class="home-section section-hero overlay bg-image" style="background-image: url('/assets/images/hero_1.jpg');" id="home-section">
+
+    <div class="container">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-md-12">
+                <div class="mb-5 text-center">
+                    <h1 class="text-white font-weight-bold">The Easiest Way To Get Your Dream Job</h1>
+                    <p>Type your keyword, then click search to find your perfect job..</p>
+                </div>
+                @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "search-jobs-form " }))
+                {
+                    <div class="row mb-5">
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0 select">
+                            @*<input type="text" class="form-control form-control-lg" placeholder="Job title, Company...">*@
+                            @Html.TextBoxFor(m => m.Query, new { @class = "form-control form-control-lg", placeholder = "Job title, Company..." })
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+
+                            @Html.DropDownListFor(m => m.StateId, Model.States, "Select State", new { @class = " selectpicker", data_style = "btn-white btn-lg", data_width = "100%", data_live_search = "true" })
+
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+
+                            @Html.DropDownListFor(m => m.type, new SelectList(Enum.GetValues(typeof(JoBoard.Models.type))), "Select Job Type", new { @class = "selectpicker", id = "job-Type", data_style = "btn-white btn-lg", data_width = "100%", data_live_search = "true" })
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                            <button type="submit" value="Search" class="btn btn-primary btn-lg btn-block text-white btn-search"><span class="icon-search icon mr-2"></span>Search Job</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 popular-keywords">
+                            <h3>Trending Keywords:</h3>
+                            <ul class="keywords list-unstyled m-0 p-0">
+                                <li><a href="#" class="">UI Designer</a></li>
+                                <li><a href="#" class="">Python</a></li>
+                                <li><a href="#" class="">Developer</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <a href="#next" class="scroll-button smoothscroll">
+        <span class=" icon-keyboard_arrow_down"></span>
+    </a>
+
+</section>
+
+<section class="py-5 bg-image overlay-primary fixed overlay" id="next" style="background-image: url('/assets/images/hero_1.jpg');">
+    <div class="container">
+        <div class="row mb-5 justify-content-center">
+            <div class="col-md-7 text-center">
+                <h2 class="section-title mb-2 text-white">JobBoard Site Stats</h2>
+                <p class="lead text-white">Search your career opportunity through @ViewBag.CountJobs jobs</p>
+            </div>
+        </div>
+        <div class="row pb-0 block__19738 section-counter">
+
+            <div class="col-6 col-md-6 col-lg-3 mb-5 mb-lg-0">
+                <div class="d-flex align-items-center justify-content-center mb-2">
+                    <strong class="number" data-number="@ViewBag.CountCondida">0</strong>
+                </div>
+                <span class="caption">Candidates</span>
+            </div>
+
+            <div class="col-6 col-md-6 col-lg-3 mb-5 mb-lg-0">
+                <div class="d-flex align-items-center justify-content-center mb-2">
+                    <strong class="number" data-number="@ViewBag.CountJobs ">0</strong>
+                </div>
+                <span class="caption">Jobs Posted</span>
+            </div>
+
+            <div class="col-6 col-md-6 col-lg-3 mb-5 mb-lg-0">
+                <div class="d-flex align-items-center justify-content-center mb-2">
+                    <strong class="number" data-number="@Model.Jobs.TotalItemCount">0</strong>
+                </div>
+                <span class="caption">Jobs Filtered</span>
+            </div>
+
+            <div class="col-6 col-md-6 col-lg-3 mb-5 mb-lg-0">
+                <div class="d-flex align-items-center justify-content-center mb-2">
+                    <strong class="number" data-number="@ViewBag.CountCompanies">0</strong>
+                </div>
+                <span class="caption">Companies</span>
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+
+<section class="site-section">
+    <div class="container">
+
+        <div class="row mb-5 justify-content-center">
+            <div class="col-md-7 text-center">
+                <h2 class="section-title mb-2"> Listed Jobs</h2>
+            </div>
+        </div>
+
+        <ul class="job-listings mb-5">
+            @foreach (var item in Model.Jobs)
+            {
+                <li class="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
+                    <a href="@Url.Action("Index", "JobDetail", new { id = item.Id })"></a>
+                    @if (@item.Company_Logo != null)
+                    {
+                        <div class="job-listing-logo">
+                            <img src="~/Uploads/Jobs/@item.Company_Logo" alt="Free Website Template by Free-Template.co" class="img-">
+                        </div>
+
+                    }
+
+                    <div class="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4 ">
+                        <div class="job-listing-position custom-width w-25 mb-3 mb-sm-0">
+                            <h2>@item.Job_Title</h2>
+                            <strong>@item.Company_Name</strong>
+                        </div>
+                        <div class="job-listing-location mb-3 mb-sm-0 custom-width @(@item.Company_Logo == null? "pl-6": "")">
+                            <span class="icon-room"></span> @item.state.StateName
+                        </div>
+                        <div class="job-listing-meta">
+                            @item.Creation_Date.ToShortDateString()
+                            <div class="text-center">
+                            </div>
+                        </div>
+                    </div>
+
+                </li>
+            }
+        </ul>
+
+        <div class="row pagination-wrap">
+            <div class="col-md-6 text-center text-md-left mb-4 mb-md-0">
+                Page @(Model.Jobs.PageCount < Model.Jobs.PageNumber ? 0 : Model.Jobs.PageNumber) of @Model.Jobs.PageCount
+            </div>
+            @Html.PagedListPager(Model.Jobs, page => Url.Action("Index", new { page, pageSize = Model.Jobs.PageSize }),
+             new PagedListRenderOptions()
+             {
+                 ContainerDivClasses = new[] { "col-md-6 text-center text-md-right" },
+                UlElementClasses = new List<string> { "custom-pagination " }
+             })
+        </div>
+
+
+    </div>
+</section>
+
+
+
+@Html.Partial("_HomePartial")
